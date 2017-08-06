@@ -11,8 +11,10 @@ Author: Brendan Shanny
 """
 import argparse
 from bs4 import BeautifulSoup
+from PIL import Image
 import requests
 import random
+from StringIO import StringIO
 
 
 null_links = [
@@ -62,6 +64,23 @@ def beautify_link(link):
 
 def filter_links(links):
     return [link for link in links if link is not None]
+
+
+def find_image(soup):
+    skip = ['featured', 'Sound-', 'logo', 'icon']
+    imgs = [img['src'] for img in soup.find_all('img', src=True)]
+    # Hopefully first one is the most appropriate img for the url
+    im_url = None
+    i = 0
+    while im_url is None or any(s for s in skip if s in im_url):
+        im_url = "https:{}".format(imgs[i])
+        i += 1
+    return Image.open(StringIO(requests.get(im_url).content))
+
+
+def grab_and_save_im(soup, filename):
+    im = find_image(soup)
+    im.save(filename)
 
 
 def find_random_page(url, degrees, output=False):
