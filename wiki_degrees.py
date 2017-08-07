@@ -17,6 +17,7 @@ import random
 from StringIO import StringIO
 
 
+# Links to avoid
 null_links = [
     'Special:', 'File:', 'Portal:', 'Main_Page',  'Category_talk:',
     'Wikipedia:', ':', '#', 'index.php', 'wikimediafoundation.org',
@@ -24,20 +25,24 @@ null_links = [
 ]
 
 
+# Grab a random integer
 def rand_int(max_int):
     return random.randint(0, max_int - 1)
 
 
+# Create a BeautifulSoup object from a url
 def soupify(url):
     page = requests.get(url)
     soup = BeautifulSoup(page.content, 'html.parser')
     return soup
 
 
+# Grab the links from a soup object
 def grab_links(soup):
     return [link['href'] for link in soup.find_all('a', href=True)]
 
 
+# Parse the title from the soup object
 def grab_title(soup):
     try:
         title = str(soup.title.contents[0]).split('-')[0]
@@ -47,6 +52,7 @@ def grab_title(soup):
     return title
 
 
+# Format a link and check for unwanted links
 def beautify_link(link):
     try:
         link = str(link)
@@ -62,10 +68,13 @@ def beautify_link(link):
         return None
 
 
+# Filter out None links
 def filter_links(links):
     return [link for link in links if link is not None]
 
 
+# Try to find the most relvant image on a wiki page
+# This needs some work
 def find_image(soup):
     skip = ['featured', 'Sound-', 'logo', 'icon']
     imgs = [img['src'] for img in soup.find_all('img', src=True)]
@@ -78,11 +87,13 @@ def find_image(soup):
     return Image.open(StringIO(requests.get(im_url).content))
 
 
+# call find_image and save it
 def grab_and_save_im(soup, filename):
     im = find_image(soup)
     im.save(filename)
 
 
+# Main function to find a random page on wikipedia
 def find_random_page(url, degrees, output=False):
     try:
         str(url)
@@ -103,6 +114,7 @@ def find_random_page(url, degrees, output=False):
         url = next_link
         degrees -= 1
     return url
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
