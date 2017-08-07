@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 This script takes a wikipedia url and prints out another wikipedia
 url X links away: aka the wikipedia degrees of freedom.

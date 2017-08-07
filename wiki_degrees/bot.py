@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 This is a twitter bot that will post two articles from wikipedia,
 along with their degrees of wikipedia.
