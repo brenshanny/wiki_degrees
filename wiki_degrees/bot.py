@@ -93,7 +93,7 @@ def push_to_twitter():
     print label
 
 
-def be_a_bot():
+def be_a_bot(t=1800):
     while True:
         push_to_twitter()
-        time.sleep(600)
+        time.sleep(t)
